@@ -8,8 +8,15 @@ import { EventEmitter } from './EventEmitter';
  */
 export const obj = {
     count: 0,
-    subscribe() {},
-    unsubscribe() {},
+    thisCount: () => {
+        obj.count++;
+    },
+    subscribe() {
+        EventEmitter.on('click', this.thisCount);
+    },
+    unsubscribe() {
+        EventEmitter.off('click', this.thisCount);
+    },
 };
 
 /*
@@ -19,8 +26,9 @@ obj1.first(1, 2, 3);
 // Внутренний вызов должен быть равносилен obj1.second(3, 2, 1)
  */
 export const obj1 = {
-    first(...args) {},
-    second() {
-        // здесь ничего писать не нужно
+    first(...args) {
+        let result = [].slice.call(args);
+        this.second(...result.reverse());
     },
+    second() {},
 };
